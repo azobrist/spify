@@ -47,7 +47,7 @@ def spi_read(addr,num):
     if addr > 255:
         rw ^= addr>>8
     for i in range(num):
-        b=[rw,addr,0x00]
+        b=[rw,addr+i,0x00]
         out.append(spi.xfer(b)[2])
     print(out)
 
@@ -72,9 +72,9 @@ def cmdline_args():
         """,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
-    p.add_argument("-r","--read", action="store", dest='radd', type=check_is_reg,
+    p.add_argument("-r","--read", action="store", dest='reg_add', type=check_is_reg,
                     help="select register to read")
-    p.add_argument("-n","--number", action="store", dest='rnum', type=int,
+    p.add_argument("-n","--number", action="store", dest='byte_num', type=int,
                     help="select number of bytes to read")
                    
     return(p.parse_args())
@@ -87,7 +87,6 @@ if __name__ == '__main__':
         
     try:
         args = cmdline_args()
-        print(args)
-        spi_read(args.radd,args.rnum)
+        spi_read(args.reg_add,args.byte_num)
     except:
-        print('Try $python <script_name> "Hello" 123 --enable')
+        print('Try $sudo ./lmk_spi.py -r {reg address} -n {bytes to read}')
