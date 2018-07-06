@@ -28,7 +28,7 @@ def spi_write(addr,val):
     b=bytearray()
     rw = 0x00
     out = []
-    if add > 255:
+    if addr > 255:
         rw ^= addr>>8
     b=[rw,addr,val]
     print(b)
