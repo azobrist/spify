@@ -20,6 +20,7 @@ def spi_read(addr,num):
         rw ^= addr>>8
     for i in range(num):
         b=[rw,addr+i,0x00]
+        print(b)
         out.append(spi.xfer(b)[2])
     print(out)
 
@@ -29,6 +30,7 @@ def spi_write(addr,val):
     if add > 255:
         rw ^= addr>>8
     b=[rw,addr,val]
+    print(b)
     out.append(spi.xfer(b)[2])
     print(out)
 
@@ -55,7 +57,7 @@ def cmdline_args():
     
     p.add_argument("-r","--read", action="store", dest='READ_REG_ADD', type=check_is_reg,
                     help="select register to read")
-    p.add_argument("-n","--number", action="store", dest='BYTE_NUM', type=int,
+    p.add_argument("-n","--number", default=1,action="store", dest='BYTE_NUM', type=int,
                     help="select number of bytes to read")
     p.add_argument("-b","--read_brd_info", action='store_true', default=False, dest='READ_BRD_INFO',
                     help="read board specific informatin")
