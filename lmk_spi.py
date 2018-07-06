@@ -40,13 +40,16 @@ def spi_interface(addr, val):
     print(type(a))
     print(type(val))
 
-# Repeatedly switch a MCP4151 digital pot off then on
-#while True:
-#    addr = input("Enter Reg Addr: ")
-#    val = input("Enter byte value in hex: ")
-#    spi_interface(addr, val)
-#    lmk10_info()
-#    time.sleep(0.5)
+def spi_read(addr,num):
+    b = bytearray()
+    rw = 0x80
+    out = []
+    if addr > 255:
+        rw ^= addr>>8
+    for i in range(num):
+        b=[rw,addr,0x00]
+        out.append(spi.xfer(b)[2])
+    print(out)
 
 def check_is_reg(string):
     if 'R' or 'r' in string:
@@ -69,10 +72,11 @@ def cmdline_args():
         """,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
-    p.add_argument("-r","--read", action="store", type=check_is_reg,
+    p.add_argument("-r","--read", action="store", dest='radd', type=check_is_reg,
                     help="select register to read")
-    p.add_argument("-i","--iteration", action="store", type=int,
-                    help="seltect number of bytes to read")
+    p.add_argument("-n","--number", action="store", dest='rnum', type=int,
+                    help="seltect
+                    number of bytes to read")
                    
     return(p.parse_args())
 
@@ -85,5 +89,6 @@ if __name__ == '__main__':
     try:
         args = cmdline_args()
         print(args)
+        spi_read(args.radd,args.rnum)
     except:
         print('Try $python <script_name> "Hello" 123 --enable')
