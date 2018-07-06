@@ -46,6 +46,17 @@ def check_is_reg(string):
         msg = "%r: Enter Rxxx or xxx,where x is numeral" % string
         raise argparse.ArgumentTypeError(msg)
 
+def check_is_hex(string):
+    if '0x' or 'h' in string:
+        s = re.sub("0x|h"."",string)
+    else:
+        s = string
+    try:
+        return int(s,16)
+    except:
+        msg = "%r: Enter hex value (0-ff)" % string
+        raise argparse.ArgumentTypeError(msg)
+
 def cmdline_args():
     # Make parser object
     p = argparse.ArgumentParser(description=
@@ -64,7 +75,7 @@ def cmdline_args():
                     help="read board specific informatin")
     p.add_argument("-w","--write", action="store",dest='WRITE_REG_ADD', type=check_is_reg, 
                     help="select register to write")
-    p.add_argument("-v","--value", action="store",dest='WRITE_VAL', type=hex,
+    p.add_argument("-v","--value", action="store",dest='WRITE_VAL', type=check_is_hex,
                     help="write hex value to selected reg address")
 
     return(p.parse_args())
