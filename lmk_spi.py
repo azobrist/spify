@@ -77,11 +77,11 @@ if __name__ == '__main__':
         
     try:
         args = cmdline_args()
-        if READ_BRD_INFO == True:
+        if args.READ_BRD_INFO == True:
             spi_read(3,4)
-        if WRITE_REG_ADD != None:
+        if args.WRITE_REG_ADD != None:
             spi_write(args.WRITE_REG_ADD,args.WRITE_VAL)
-        if READ_REG_ADD != None:
+        if args.READ_REG_ADD != None:
             spi_read(args.READ_REG_ADD,args.BYTE_NUM)
     except:
         print('Try $sudo ./lmk_spi.py -r {reg address} -n {bytes to read}')
