@@ -11,9 +11,9 @@ spi = spidev.SpiDev()
 spi.open(3, 0)
 spi.max_speed_hz = 115200 
 spi.lsbfirst = False
+b=bytearray()
 
 def spi_read(addr,num):
-    b = bytearray()
     rw = 0x80
     out = []
     if addr > 255:
@@ -21,6 +21,15 @@ def spi_read(addr,num):
     for i in range(num):
         b=[rw,addr+i,0x00]
         out.append(spi.xfer(b)[2])
+    print(out)
+
+def spi_write(addr,val):
+    rw = 0x00
+    out = []
+    if add > 255:
+        rw ^= addr>>8
+    b=[rw,addr,val]
+    out.append(spi.xfer(b)[2])
     print(out)
 
 def check_is_reg(string):
@@ -46,7 +55,7 @@ def cmdline_args():
     
     p.add_argument("-r","--read", action="store", dest='READ_REG_ADD', type=check_is_reg,
                     help="select register to read")
-    p.add_argument("-n","--number", action="store", dest='BYTE_ADD', type=int,
+    p.add_argument("-n","--number", action="store", dest='BYTE_NUM', type=int,
                     help="select number of bytes to read")
     p.add_argument("-b","--read_brd_info", action='store_true', default=False, dest='READ_BRD_INFO',
                     help="read board specific informatin")
@@ -67,7 +76,10 @@ if __name__ == '__main__':
         args = cmdline_args()
         if READ_BRD_INFO == True:
             spi_read(3,4)
-        spi_read(args.reg_add,args.byte_num)
+        if WRITE_REG_ADD != None:
+            spi_write(args.WRITE_REG_ADD,args.WRITE_VAL)
+        if READ_REG_ADD != None:
+            spi_read(args.READ_REG_ADD,args.BYTE_NUM)
     except:
         print('Try $sudo ./lmk_spi.py -r {reg address} -n {bytes to read}')
         print(args)
