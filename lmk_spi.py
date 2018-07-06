@@ -75,8 +75,7 @@ def cmdline_args():
     p.add_argument("-r","--read", action="store", dest='radd', type=check_is_reg,
                     help="select register to read")
     p.add_argument("-n","--number", action="store", dest='rnum', type=int,
-                    help="seltect
-                    number of bytes to read")
+                    help="select number of bytes to read")
                    
     return(p.parse_args())
 
