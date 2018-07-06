@@ -69,9 +69,9 @@ def cmdline_args():
         """,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
-    p.add_argument("-r","--read", type=check_is_reg,
+    p.add_argument("-r","--read", action="store", type=check_is_reg,
                     help="select register to read")
-    p.add_argument("-i","--iteration", type=int,
+    p.add_argument("-i","--iteration", action="store", type=int,
                     help="seltect number of bytes to read")
                    
     return(p.parse_args())
@@ -87,4 +87,3 @@ if __name__ == '__main__':
         print(args)
     except:
         print('Try $python <script_name> "Hello" 123 --enable')
-        print(args)
