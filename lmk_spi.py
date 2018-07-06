@@ -11,9 +11,9 @@ spi = spidev.SpiDev()
 spi.open(3, 0)
 spi.max_speed_hz = 115200 
 spi.lsbfirst = False
-b=bytearray()
 
 def spi_read(addr,num):
+    b=bytearray()
     rw = 0x80
     out = []
     if addr > 255:
@@ -25,6 +25,7 @@ def spi_read(addr,num):
     print(out)
 
 def spi_write(addr,val):
+    b=bytearray()
     rw = 0x00
     out = []
     if add > 255:
