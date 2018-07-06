@@ -12,34 +12,6 @@ spi.open(3, 0)
 spi.max_speed_hz = 115200 
 spi.lsbfirst = False
 
-# Split an integer input into a two byte array to send via SPI
-def lmk10_info():
-    b = bytearray();
-    b = [0x80,0x03,0x00]
-    print("TX: {0}".format(b))
-    print(type(b))
-#    out = bytearray()
-    out = spi.xfer(b)
-    b = [0x80,4,0x00]
-    out.append(spi.xfer(b)[2])
-    b = [0x80,0x05,0x00]
-    out.append(spi.xfer(b)[2])
-    b = [0x80,0x06,0x00]
-    out.append(spi.xfer(b)[2])
-    b = [0x80,0x0c,0x00]
-    out.append(spi.xfer(b)[2])
-    b = [0x80,13,0x00]
-    out.append(spi.xfer(b)[2])
-#    out = spi.readbytes(3)
-    print(out, type(out))
- 
-def spi_interface(addr, val):
-    a = int(addr)
-    v = int(val)
-    print(a,v)
-    print(type(a))
-    print(type(val))
-
 def spi_read(addr,num):
     b = bytearray()
     rw = 0x80
@@ -72,11 +44,17 @@ def cmdline_args():
         """,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
-    p.add_argument("-r","--read", action="store", dest='reg_add', type=check_is_reg,
+    p.add_argument("-r","--read", action="store", dest='READ_REG_ADD', type=check_is_reg,
                     help="select register to read")
-    p.add_argument("-n","--number", action="store", dest='byte_num', type=int,
+    p.add_argument("-n","--number", action="store", dest='BYTE_ADD', type=int,
                     help="select number of bytes to read")
-                   
+    p.add_argument("-b","--read_brd_info", action='store_true', default=False, dest='READ_BRD_INFO',
+                    help="read board specific informatin")
+    p.add_argument("-w","--write", action="store",dest='WRITE_REG_ADD', type=check_is_reg, 
+                    help="select register to write")
+    p.add_argument("-v","--value", action="store",dest='WRITE_VAL', type=hex,
+                    help="write hex value to selected reg address")
+
     return(p.parse_args())
 
 if __name__ == '__main__':
@@ -87,6 +65,9 @@ if __name__ == '__main__':
         
     try:
         args = cmdline_args()
+        if READ_BRD_INFO == True:
+            spi_read(3,4)
         spi_read(args.reg_add,args.byte_num)
     except:
         print('Try $sudo ./lmk_spi.py -r {reg address} -n {bytes to read}')
+        print(args)
