@@ -48,7 +48,7 @@ def check_is_reg(string):
 
 def check_is_hex(string):
     if '0x' or 'h' in string:
-        s = re.sub("0x|h"."",string)
+        s = re.sub("0x|h","",string)
     else:
         s = string
     try:
